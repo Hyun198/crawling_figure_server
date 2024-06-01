@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
     /* res.sendFile(path.join(__dirname, 'client', 'public', 'index.html')); */
-    res.sendFile('hello from the backend!');
+    res.send('hello from the backend!');
 })
 
 app.get('/search', async (req, res) => {
