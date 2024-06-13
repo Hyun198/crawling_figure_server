@@ -32,7 +32,7 @@ app.get('/search', async (req, res) => {
         const keyword = req.query.keyword;
         const data1 = await Poison_scrapeWebsite('https://poisonapple.co.kr', keyword)
         const data2 = await gloryMondayWebsite('https://www.glorymonday.com', keyword)
-        const responseData = { data1, data2 } //
+        const responseData = { data1, data2 } //data2
         console.log(responseData);
         res.json(responseData);
 
@@ -42,7 +42,7 @@ app.get('/search', async (req, res) => {
     }
 })
 
-app.post('/search', async (req, res) => {
+/* app.post('/search', async (req, res) => {
     try {
         const keyword = req.body.keyword.toString();
         const postdata1 = await FigureMallWebsite('http://www.figuremall.co.kr', keyword);
@@ -55,7 +55,7 @@ app.post('/search', async (req, res) => {
     }
 })
 
-
+ */
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
