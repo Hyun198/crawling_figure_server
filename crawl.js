@@ -48,7 +48,7 @@ async function Poison_scrapeWebsite(url, keyword) {
 }
 
 async function gloryMondayWebsite(url, keyword) {
-    const browser = await puppeteer.launch();
+    const browser = await launchBrowser();
     const page = await browser.newPage();
     try {
 
@@ -59,7 +59,9 @@ async function gloryMondayWebsite(url, keyword) {
         const productSelector = '.item_gallery_type > ul > li';
         const productElements = await page.$$(productSelector);
 
-        for (const productElement of productElements) {
+        for (const [index, productElement] of productElements.entries()) {
+            if (index >= 5) break; // 첫 5개 제품만 가져오기
+
             const productName = await productElement.$eval('div.item_cont div.item_info_cont div.item_tit_box strong.item_name', element => element.textContent.trim());
             const imageUrl = await productElement.$eval('div.item_cont div.item_photo_box a img', element => element.getAttribute('src'));
             const priceElement = await productElement.$('div.item_cont div.item_info_cont div.item_money_box strong.item_price');
@@ -76,8 +78,6 @@ async function gloryMondayWebsite(url, keyword) {
                 price: productPrice,
                 link: link,
             });
-
-
         }
         return products;
     }
@@ -93,7 +93,7 @@ async function gloryMondayWebsite(url, keyword) {
 }
 
 async function FigureMallWebsite(url, keyword) {
-    const browser = await puppeteer.launch();
+    const browser = await launchBrowser();
     const page = await browser.newPage();
     try {
         await page.goto(`${url}/shop/shopbrand.html`);
@@ -104,7 +104,9 @@ async function FigureMallWebsite(url, keyword) {
 
         let products = [];
         const productElements = await page.$$('#searchWrap div.prd-list tbody tr td');
-        for (const productElement of productElements) {
+        for (const [index, productElement] of productElements.entries()) {
+            if (index >= 5) break; // 첫 5개 제품만 가져오기
+
             const productName = await productElement.$eval('li.dsc.name', element => element.textContent.trim());
             const productPrice = await productElement.$eval('li.price', element => element.textContent.trim());
             const productImage = await productElement.$eval('li > div > a > img', element => element.getAttribute('src'));
@@ -114,9 +116,9 @@ async function FigureMallWebsite(url, keyword) {
                 image: url + "/" + productImage,
                 price: productPrice,
             });
-
         }
-        return products
+
+        return products;
     } catch (error) {
         console.error("figuremall:", error);
     } finally {
@@ -128,7 +130,7 @@ async function FigureMallWebsite(url, keyword) {
 
 
 async function figureCityWebsite(url, keyword) {
-    const browser = await puppeteer.launch();
+    const browser = await launchBrowser();
     const page = await browser.newPage();
     try {
         await page.goto(`${url}/shop/shopbrand.html`);
@@ -140,17 +142,18 @@ async function figureCityWebsite(url, keyword) {
 
         let products = [];
         const productElements = await page.$$('#prdSearch div.prd-list table tbody tr td');
-        for (const productElement of productElements) {
-            const productName = await productElement.$eval('li.dsc', element => element.textContent.trim())
-            const productPrice = await productElement.$eval('li.price', element => element.textContent.trim())
+        for (const [index, productElement] of productElements.entries()) {
+            if (index >= 5) break; // 첫 5개 제품만 가져오기
+
+            const productName = await productElement.$eval('li.dsc', element => element.textContent.trim());
+            const productPrice = await productElement.$eval('li.price', element => element.textContent.trim());
             const productImage = await productElement.$eval('div.thumb a img', element => element.getAttribute('src'));
 
             products.push({
                 name: productName,
                 image: url + "/" + productImage,
                 price: productPrice,
-            })
-
+            });
         }
 
         return products;
