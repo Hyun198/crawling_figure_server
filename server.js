@@ -13,7 +13,7 @@ const app = express();
  */
 
 app.use(cors({
-    origin: 'https://figureinfo.netlify.app'
+    origin: 'https://figureinfo.netlify.app/'
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
