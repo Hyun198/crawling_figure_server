@@ -30,10 +30,10 @@ app.get('/', async (req, res) => {
 app.get('/search', async (req, res) => {
     try {
         const keyword = req.query.keyword;
-        const data1 = await Poison_scrapeWebsite('https://poisonapple.co.kr', keyword);
-        const data2 = await gloryMondayWebsite('https://www.glorymonday.com', keyword)
-        const responseData = { data1, data2 }
-        console.log(responseData.data2);
+        const data1 = await Poison_scrapeWebsite('https://poisonapple.co.kr', keyword)
+        /* const data2 = await gloryMondayWebsite('https://www.glorymonday.com', keyword) */
+        const responseData = { data1 } //data2
+        console.log(responseData);
         res.json(responseData);
 
     } catch (error) {
@@ -42,7 +42,7 @@ app.get('/search', async (req, res) => {
     }
 })
 
-app.post('/search', async (req, res) => {
+/* app.post('/search', async (req, res) => {
     try {
         const keyword = req.body.keyword.toString();
         const postdata1 = await FigureMallWebsite('http://www.figuremall.co.kr', keyword);
@@ -53,7 +53,7 @@ app.post('/search', async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-})
+}) */
 
 
 

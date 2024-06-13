@@ -1,19 +1,31 @@
 const puppeteer = require('puppeteer');
 
-
+async function launchBrowser() {
+    return await puppeteer.launch({
+        headless: true,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--disable-gpu'
+        ]
+    });
+}
 
 async function Poison_scrapeWebsite(url, keyword) {
-    const browser = await puppeteer.launch();
+    const browser = await launchBrowser();
     const page = await browser.newPage();
     try {
 
         await page.goto(`${url}/goods/goods_search.php?keyword=${encodeURIComponent(keyword)}`);
 
-        let products = [];
-
+        const products = [];
         const productSelector = '.item-display.type-gallery .list > ul > li';
         const productElements = await page.$$(productSelector);
-        for (const productElement of productElements) {
+
+        for (const [index, productElement] of productElements.entries()) {
+            if (index >= 5) break; // 첫 5개 제품만 가져오기
             const productName = await productElement.$eval('.txt strong', element => element.textContent.trim());
             const imageUrl = await productElement.$eval('.thumbnail img', element => element.getAttribute('src'));
             const productPrice = await productElement.$eval('.price .cost strong', element => element.textContent.trim());
@@ -23,7 +35,7 @@ async function Poison_scrapeWebsite(url, keyword) {
                 price: productPrice,
             });
         }
-        return products
+        return products;
     } catch (error) {
         console.error("poison apple: ", error);
     } finally {
